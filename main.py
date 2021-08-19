@@ -19,6 +19,10 @@ class SigmaUSD:
     def get_telegram_chat_id(self,title):
         chatid = 0
         updates = self.bot.get_updates()
+        print('---------------------------')
+        print(updates)
+        print('---------------------------')
+
         for update in updates:
             try:
                 if update['message']['chat']['type'] == 'group':
@@ -35,9 +39,19 @@ class SigmaUSD:
             time.sleep(10)
             section = self.driver.find_element_by_xpath('//section[@class="coins-info"]').find_elements_by_xpath(
                 '//div[@class="coin-info tiles"]')[1]
-            return int(str(
+            text = str(
                 section.find_element_by_class_name('coin-prop-footer').find_elements_by_class_name('coin-prop-right')[
-                    1].find_element_by_class_name('coin-prop-right__value').text).replace('%', ''))
+                    1].find_element_by_class_name('coin-prop-right__value').text).replace('%', '')
+            text = text.replace(u'\u200c', '')
+            text = text.replace(' ', '')
+            
+            if len(text) == 0:
+                return -1
+            else:
+                return int(text)
+            # return int(str(
+            #     section.find_element_by_class_name('coin-prop-footer').find_elements_by_class_name('coin-prop-right')[
+            #         1].find_element_by_class_name('coin-prop-right__value').text).replace('%', ''))
         except Exception as e:
             print("Exception Occured while getting Data: " + str(e))
 
@@ -48,6 +62,12 @@ class SigmaUSD:
                     data = json.load(f)
                     self.bot = telegram.Bot(token=data['token'])
                     current_ratio = self.get_data()
+                    if current_ratio == -1:
+                        continue
+                    
+                    print('--------------------\n')
+                    print('current ratio : ', current_ratio)
+                    print('--------------------\n')
                     if data['ratio'] >= current_ratio:
                         self.bot.send_message(text=data['message'] + str(current_ratio),
                                               chat_id=self.get_telegram_chat_id(title=data["groupName"]))
