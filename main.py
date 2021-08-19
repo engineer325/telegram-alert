@@ -19,10 +19,6 @@ class SigmaUSD:
     def get_telegram_chat_id(self,title):
         chatid = 0
         updates = self.bot.get_updates()
-        print('---------------------------')
-        print(updates)
-        print('---------------------------')
-
         for update in updates:
             try:
                 if update['message']['chat']['type'] == 'group':
