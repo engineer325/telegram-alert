@@ -11,7 +11,7 @@ class SigmaUSD:
         self.chrome_options.add_argument("--headless")
         self.chrome_options.add_argument("disable-infobars")
         self.chrome_options.add_argument("disable-web-security")
-        self.chrome_driver_location = "chromedriver.exe"
+        self.chrome_driver_location = "chromedriver"
         self.driver = webdriver.Chrome(executable_path=self.chrome_driver_location, options=self.chrome_options)
         self.driver.delete_all_cookies()
         self.bot = None
